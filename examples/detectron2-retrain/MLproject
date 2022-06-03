@@ -1,0 +1,15 @@
+name: vehicle-detection
+
+docker_env:
+  image: training-container:detectron2
+
+entry_points:
+  main: 
+    parameters:
+      model_name : {type: string, default: "default"}
+      experiment_name : {type: string, default: "default"}
+      lower_is_better : {type: bool, default: False}
+      primary_metric : {type: string, default: "mAP"}
+    command: "python train.py --model_name {model_name} --experiment_name {experiment_name} --lower {lower_is_better} --p_metric {primary_metric}"
+  test: 
+    command: "python eval_inference.py"

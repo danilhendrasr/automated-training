@@ -1,4 +1,3 @@
-import json
 import os
 import shutil
 
@@ -14,16 +13,16 @@ def create_new_version_dir():
     shutil.copytree(latest_version_dir, new_version_dir)
     return new_version_dir
 
+# ! to be removed
+# def write_all_versions_benchmark():
+#     """iterate through all version then grep the eval result bbox"""
+#     benchmark = {}
+#     list_version_dir = os.listdir("version")
+#     for i in list_version_dir:
+#         model_metadata_path = os.path.join("version", i, "model-metadata.json")
+#         with open(model_metadata_path) as mtdata:
+#             metadata = json.load(mtdata)
+#         benchmark[i] = metadata["eval"]["result"]["bbox"]
 
-def write_all_versions_benchmark():
-    """iterate through all version then grep the eval result bbox"""
-    benchmark = {}
-    list_version_dir = os.listdir("version")
-    for i in list_version_dir:
-        model_metadata_path = os.path.join("version", i, "model-metadata.json")
-        with open(model_metadata_path) as mtdata:
-            metadata = json.load(mtdata)
-        benchmark[i] = metadata["eval"]["result"]["bbox"]
-
-    with open("benchmark.json", "w") as f:
-        json.dump(benchmark, f)
+#     with open("benchmark.json", "w") as f:
+#         json.dump(benchmark, f)

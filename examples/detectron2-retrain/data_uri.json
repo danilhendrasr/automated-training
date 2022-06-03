@@ -1,0 +1,4 @@
+{
+    "model": "https://modelrepo-autotraining-poc-ndflx.s3.amazonaws.com/models/modelv3/output-model.zip",
+    "dataset": "https://modelrepo-autotraining-poc-ndflx.s3.amazonaws.com/datasets/vh-det-v01.zip"
+}
