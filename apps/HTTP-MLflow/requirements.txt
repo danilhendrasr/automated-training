@@ -1,0 +1,4 @@
+mlflow
+fastapi
+uvicorn
+python-dotenv
