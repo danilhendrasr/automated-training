@@ -4,7 +4,7 @@ FastAPI listen http request then run MLflow train.
 
 How to run this project
 1. Clone the repo and then open the repo folder.
-2. Rename `.env-example` to `.env` then update the file.
+2. Rename `.env.example` to `.env` then update the file.
 2. Build docker image.
 ```
 docker build -t my-http-mlflow-image .
