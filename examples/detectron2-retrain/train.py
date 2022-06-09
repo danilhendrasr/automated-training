@@ -150,10 +150,10 @@ for d in random.sample(dataset_dicts, 8):
 mlflow.log_artifacts(cfg.OUTPUT_DIR_TEST_SET_EVALUATION, "test-set-evaluation")
 mlflow.log_text(str(eval_result), "test-set-evaluation/coco-metrics.txt")
 parser = argparse.ArgumentParser()
-parser.add_argument("--model_name", required=True)
-parser.add_argument("--experiment_name", required=True)
-parser.add_argument("--lower", required=False)
-parser.add_argument("--p_metric", required=True)
+parser.add_argument("--model_name", required=True, help="Nama model untuk diregistrasi.")
+parser.add_argument("--experiment_name", required=True, help="Digunakan untuk separate dengan project / repo yang lain.")
+parser.add_argument("--lower", required=False, help="Default True. Diguankan untuk perbandingan metric yang diinginkan\n Jika True, maka akan dilakukan registrasi model bila metric lebih rendah daripada metric di registered model")
+parser.add_argument("--p_metric", required=True, help="Nama metric yang akan dibandingkan.")
 args = parser.parse_args()
 
 model_name = args.model_name
@@ -166,20 +166,15 @@ else:
     lower = True
 p_metric = args.p_metric
 client = mlflow.tracking.MlflowClient()
-latest_version_run_id = client.get_latest_versions(model_name)[0].run_id
-latest_p_metric = client.get_metric_history(latest_version_run_id, p_metric)[0].value
-# Dibawah ini bisa di refactor, sementara ku tulis begini biar jelas.
-if lower is True:
-    if eval_result["bbox"][p_metric] > latest_p_metric:
-        mlflow.pytorch.log_model(predictor.model, 'model')
-    else:
-        mlflow.pytorch.log_model(predictor.model, 'model', registered_model_name=model_name)
-elif lower is False:
-    if eval_result["bbox"][p_metric] > latest_p_metric:
-        mlflow.pytorch.log_model(predictor.model, 'model', registered_model_name=model_name)
-    else:
-        mlflow.pytorch.log_model(predictor.model, 'model')
-
+utility.auto_compare_and_register(
+    model = predictor.model,
+    eval_metric=eval_result["bbox"][p_metric],
+    model_name=model_name,
+    lower=lower,
+    p_metric=p_metric,
+    client=client,
+    mlflow_model=mlflow.pytorch
+)
 # %%
 metadata["time_stamp"] = str(datetime.datetime.now())
 version = new_version_dir.split("/")[-1]
