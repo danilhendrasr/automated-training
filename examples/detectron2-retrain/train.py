@@ -171,7 +171,7 @@ utility.auto_compare_and_register(
     eval_metric=eval_result["bbox"][p_metric],
     model_name=model_name,
     lower=lower,
-    p_metric=p_metric,
+    p_metric=f"Test Set {p_metric}",
     client=client,
     mlflow_model=mlflow.pytorch
 )
