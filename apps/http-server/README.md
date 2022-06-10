@@ -20,3 +20,16 @@ docker run \
     my-http-mlflow-image \
     uvicorn main:app --host 0.0.0.0 --port 5005
 ```
+4. Navigate to `http://server.name/docs/` to send request using swager UI
+5. or Send `POST` request (using our example)
+```
+curl -X 'POST' \
+  'http://server.name/retrain' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "experiment_name": "name-of-your-experiment",
+  "get_uri": "https://git@github.com/danilhendrasr/automated-training.git#examples/detectron2-retrain",
+  "get_commit_id": "main"
+}'
+```
