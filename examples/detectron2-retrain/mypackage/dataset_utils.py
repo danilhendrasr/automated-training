@@ -60,9 +60,9 @@ def get_dataset_dicts(img_dir, ann_dir):
         record["annotations"] = objs
         dataset_dicts.append(record)
         
-        # ! dummy limit
-        # if i == 10:
-        #     break
+        #! dummy limit
+        if i == 10:
+            break
 
     return dataset_dicts
 
