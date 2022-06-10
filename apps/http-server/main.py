@@ -31,7 +31,6 @@ async def retrain(parameters: Parameters):
             uri=parameters.get_uri,
             docker_args={"gpus": "device=0"},
             experiment_name=parameters.experiment_name,
-            parameters={"path": "try-here"},
             version=parameters.get_commit_id,
         )
         requests.post(webhook_url, json={"content": "MLFlow retrain succeeded"})
