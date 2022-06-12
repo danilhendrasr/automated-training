@@ -1,0 +1,38 @@
+name: mnist-autolog-example
+
+# conda_env: conda.yaml
+
+entry_points:
+  main:
+    parameters:
+      model_name : {type: string, default: "default"}
+      experiment_name : {type: string, default: "pytorch_lightning"}
+      lower_is_better : {type: bool, default: False}
+      primary_metric : {type: string, default: "avg_test_acc"}
+      max_epochs: {type: int, default: 5}
+      gpus: {type: int, default: 0}
+      strategy: {type str, default: "None"}
+      batch_size: {type: int, default: 64}
+      num_workers: {type: int, default: 3}
+      learning_rate: {type: float, default: 0.001}
+      patience: {type int, default: 3}
+      mode: {type str, default: 'min'}
+      verbose: {type bool, default: True}
+      monitor: {type str, default: 'val_loss'}
+
+    command: |
+          python train.py \
+            --max_epochs {max_epochs} \
+            --gpus {gpus} \
+            --strategy {strategy} \
+            --batch_size {batch_size} \
+            --num_workers {num_workers} \
+            --lr {learning_rate} \
+            --es_patience {patience} \
+            --es_mode {mode} \
+            --es_verbose {verbose} \
+            --es_monitor {monitor} \
+            --model_name {model_name} \
+            --experiment_name {experiment_name} \
+            --lower {lower_is_better} \
+            --p_metric {primary_metric}
