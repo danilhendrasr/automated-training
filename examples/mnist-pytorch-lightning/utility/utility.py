@@ -1,3 +1,5 @@
+import mlflow
+
 def auto_compare_and_register(model, eval_metric, model_name, lower, p_metric, client, mlflow_model):
     """Do auto compare eval_metric with latest metric on the latest version model registered"""
     try:
