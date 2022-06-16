@@ -1,16 +1,11 @@
 #
 # Trains an MNIST digit recognizer using PyTorch Lightning,
 # and uses Mlflow to log metrics, params and artifacts
-# NOTE: This example requires you to first install
-# pytorch-lightning (using pip install pytorch-lightning)
-#       and mlflow (using pip install mlflow).
-#
-# pylint: disable=arguments-differ
-# pylint: disable=unused-argument
-# pylint: disable=abstract-method
+
 from audioop import avg
 import pytorch_lightning as pl
 import mlflow.pytorch
+import mlflow
 import logging
 import os
 import torch
@@ -21,6 +16,8 @@ from pytorch_lightning.callbacks import LearningRateMonitor
 from torch.nn import functional as F
 from torch.utils.data import DataLoader, random_split
 from torchvision import datasets, transforms
+
+from utility.utility import auto_compare_and_register
 
 try:
     from torchmetrics.functional import accuracy
@@ -341,4 +338,24 @@ if __name__ == "__main__":
 
     trainer.fit(model, dm)
     trainer.test(datamodule=dm)
-    mlflow.pytorch.log_model(model, 'model')
+    
+    act_run = mlflow.active_run()
+    run_id = act_run.info.id
+
+
+    # auto register model
+    client = mlflow.tracking.MLflowClient()
+    p_metric = dict_args["p_metric"]
+    model_name = dict_args["model_name"]
+    lower = dict_args["lower"]
+    eval_metric = client.get_metric_history(run_id, p_metric)[0].value
+    
+    auto_compare_and_register(
+        model=model,
+        eval_metric=eval_metric,
+        model_name=model_name,
+        lower=lower,
+        p_metric=p_metric,
+        client=client,
+        mlflow_model=mlflow.pytorch
+        )
