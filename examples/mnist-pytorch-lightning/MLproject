@@ -1,12 +1,12 @@
 name: mnist-autolog-example
 
-docker_env: 
-  image: millenia911/pytorch-lightning-mlflow:latest
+# docker_env: 
+#   image: millenia911/pytorch-lightning-mlflow:latest
 
 entry_points:
   main:
     parameters:
-      model_name : {type: string, default: "default"}
+      model_name : {type: string, default: "pytorch_mnist"}
       experiment_name : {type: string, default: "pytorch_lightning"}
       lower_is_better : {type: bool, default: False}
       primary_metric : {type: string, default: "avg_test_acc"}

@@ -340,11 +340,11 @@ if __name__ == "__main__":
     trainer.test(datamodule=dm)
     
     act_run = mlflow.active_run()
-    run_id = act_run.info.id
+    run_id = act_run.info.run_id
 
 
     # auto register model
-    client = mlflow.tracking.MLflowClient()
+    client = mlflow.tracking.MlflowClient()
     p_metric = dict_args["p_metric"]
     model_name = dict_args["model_name"]
     lower = dict_args["lower"]
