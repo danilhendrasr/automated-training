@@ -50,7 +50,7 @@ if __name__ == "__main__":
     auto_compare_and_register(
         model=myElasticNet,
         eval_metric=metric3,
-        model_name="ElasticnetDummy2",
+        model_name="SklearnElasticnetDummy",
         lower=False,
         p_metric="metric3",
         client=client,
