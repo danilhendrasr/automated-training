@@ -1,0 +1,8 @@
+name: sklearn-dummy
+
+docker_env: 
+  image: hidayathamir/dummy-example-mbkm2-intern-timc-nodeflux
+
+entry_points:
+  main:
+    command: python train.py
