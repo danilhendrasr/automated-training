@@ -1,7 +1,7 @@
 name: mnist-autolog-example
 
-# docker_env: 
-#   image: millenia911/pytorch-lightning-mlflow:latest
+docker_env: 
+  image: millenia911/pytorch-lightning-mlflow:latest
 
 entry_points:
   main:
