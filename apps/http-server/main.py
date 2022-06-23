@@ -1,5 +1,6 @@
 import os
 
+import docker
 import dotenv
 import mlflow
 import requests
@@ -35,16 +36,26 @@ async def retrain(parameters: Parameters):
     if parameters.folder_location != "":
         uri += f"#{parameters.folder_location}"
     try:
-        mlflow.projects.run(
+        local_submitted_run = mlflow.projects.run(
             uri=uri,
             docker_args={"gpus": "device=0"},
             experiment_name=parameters.experiment_name,
             version=parameters.commit_hash,
         )
-        requests.post(webhook_url, json={"content": "MLflow retrain succeeded"})
     except Exception as e:
         requests.post(
             webhook_url, json={"content": f"MLflow retrain failed : {str(e)}"}
         )
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+    mlflow_client = mlflow.tracking.MlflowClient()
+    run = mlflow_client.get_run(local_submitted_run.run_id)
+    docker_image_name = run.data.tags["mlflow.docker.image.uri"]
+    docker_client = docker.from_env()
+    try:
+        docker_client.images.remove(docker_image_name)
+    except docker.errors.ImageNotFound as e:
+        print(
+            f"Can not remove image '{docker_image_name}' because image '{docker_image_name}' not found"
+        )
+    requests.post(webhook_url, json={"content": "MLflow retrain succeeded"})
     return {"message": "Success"}
