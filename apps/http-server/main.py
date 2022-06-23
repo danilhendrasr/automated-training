@@ -14,8 +14,9 @@ webhook_url = os.environ["webhook_url"]
 
 class Parameters(BaseModel):
     experiment_name: str
-    get_uri: str
-    get_commit_id: str = "main"
+    git_uri: str
+    folder_location: str = ""
+    commit_id: str = "main"
 
 
 @app.get("/")
@@ -25,18 +26,25 @@ async def root():
 
 @app.post("/retrain")
 async def retrain(parameters: Parameters):
-    requests.post(webhook_url, json={"content": "MLFlow retrain running"})
+    content = "MLflow retrain running\n```\n{\n"
+    for k, v in parameters:
+        content += f'\t"{k}": "{v}",\n'
+    content += "}\n```"
+    requests.post(webhook_url, json={"content": content})
+    uri = parameters.git_uri
+    if parameters.folder_location != "":
+        uri += f"#{parameters.folder_location}"
     try:
         mlflow.projects.run(
-            uri=parameters.get_uri,
+            uri=uri,
             docker_args={"gpus": "device=0"},
             experiment_name=parameters.experiment_name,
-            version=parameters.get_commit_id,
+            version=parameters.commit_id,
         )
-        requests.post(webhook_url, json={"content": "MLFlow retrain succeeded"})
+        requests.post(webhook_url, json={"content": "MLflow retrain succeeded"})
     except Exception as e:
         requests.post(
-            webhook_url, json={"content": f"MLFlow retrain failed : {str(e)}"}
+            webhook_url, json={"content": f"MLflow retrain failed : {str(e)}"}
         )
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     return {"message": "Success"}
