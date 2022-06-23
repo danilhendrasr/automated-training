@@ -16,7 +16,7 @@ class Parameters(BaseModel):
     experiment_name: str
     git_uri: str
     folder_location: str = ""
-    commit_id: str = "main"
+    commit_hash: str = "main"
 
 
 @app.get("/")
@@ -39,7 +39,7 @@ async def retrain(parameters: Parameters):
             uri=uri,
             docker_args={"gpus": "device=0"},
             experiment_name=parameters.experiment_name,
-            version=parameters.commit_id,
+            version=parameters.commit_hash,
         )
         requests.post(webhook_url, json={"content": "MLflow retrain succeeded"})
     except Exception as e:
