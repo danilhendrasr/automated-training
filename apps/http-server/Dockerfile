@@ -1,11 +1,5 @@
 FROM ubuntu:latest
 
-WORKDIR /app
-
-COPY ./main.py .
-
-COPY .env .
-
 RUN apt-get update
 
 RUN apt-get install -y ca-certificates 
@@ -48,5 +42,11 @@ RUN pip install uvicorn
 RUN pip install python-dotenv
 
 RUN pip install docker
+
+WORKDIR /app
+
+COPY ./main.py .
+
+COPY .env .
 
 CMD bash
