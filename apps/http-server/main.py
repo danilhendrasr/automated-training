@@ -16,7 +16,7 @@ webhook_url = os.environ["webhook_url"]
 class Parameters(BaseModel):
     experiment_name: str
     git_uri: str
-    folder_location: str = ""
+    MLproject_location: str = ""
     commit_hash: str = "main"
 
 
@@ -33,8 +33,8 @@ async def retrain(parameters: Parameters):
     content += "}\n```"
     requests.post(webhook_url, json={"content": content})
     uri = parameters.git_uri
-    if parameters.folder_location != "":
-        uri += f"#{parameters.folder_location}"
+    if parameters.MLproject_location != "":
+        uri += f"#{parameters.MLproject_location}"
     try:
         local_submitted_run = mlflow.projects.run(
             uri=uri,
