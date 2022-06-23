@@ -47,4 +47,6 @@ RUN pip install uvicorn
 
 RUN pip install python-dotenv
 
+RUN pip install docker
+
 CMD bash
