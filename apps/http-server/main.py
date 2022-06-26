@@ -11,6 +11,8 @@ from pydantic import BaseModel
 dotenv.load_dotenv()
 app = FastAPI()
 webhook_url = os.environ["webhook_url"]
+thread_id = "990434052538507294"
+webhook_url += f"?thread_id={thread_id}"
 
 
 class Parameters(BaseModel):
@@ -27,6 +29,8 @@ async def root():
 
 @app.post("/retrain")
 async def retrain(parameters: Parameters):
+    # content used for notification that has detail req body.
+    # so user know which retrain is running.
     content = "MLflow retrain running\n```\n{\n"
     for k, v in parameters:
         content += f'\t"{k}": "{v}",\n'
@@ -47,6 +51,7 @@ async def retrain(parameters: Parameters):
             webhook_url, json={"content": f"MLflow retrain failed : {str(e)}"}
         )
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+    # Auto remove image that has been used for retrain, so it will not be spamming.
     mlflow_client = mlflow.tracking.MlflowClient()
     run = mlflow_client.get_run(local_submitted_run.run_id)
     docker_image_name = run.data.tags["mlflow.docker.image.uri"]
@@ -57,5 +62,7 @@ async def retrain(parameters: Parameters):
         print(
             f"Can not remove image '{docker_image_name}' because image '{docker_image_name}' not found"
         )
-    requests.post(webhook_url, json={"content": "MLflow retrain succeeded"})
+    run_url = f"http://192.168.103.67:5007/#/experiments/{run.info.experiment_id}/runs/{local_submitted_run.run_id}"
+    content = f"MLflow retrain succeeded, for more detail see\n{run_url}"
+    requests.post(webhook_url, json={"content": content})
     return {"message": "Success"}
