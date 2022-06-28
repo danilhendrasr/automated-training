@@ -37,13 +37,13 @@ if __name__ == "__main__":
     param_parent = {}
     metric_parent = {"metric3": 0.0}
     model = None
-    list_param_alpha =    [0.3, 0.3, 0.8, 0.4, 0.6, 0.3, 0.6]
-    list_param_l1_ratio = [0.3, 0.5, 0.9, 0.7, 0.4, 0.3, 0.4]
-    for i in range(7):
+    list_param_alpha = [0.43, 0.82, 0.46, 0.44, 0.44, 0.65, 0.4]
+    list_param_l1_ratio = [0.79, 0.73, 0.49, 0.83, 0.46, 0.68, 0.51]
+    for i in range(len(list_param_l1_ratio)):
         mlflow.start_run(run_name=f"child{i}", nested=True)
         time.sleep(3)
-        alpha = random.randint(30, 99) / 100
-        l1_ratio = random.randint(30, 99) / 100
+        alpha = list_param_alpha[i]
+        l1_ratio = list_param_l1_ratio[i]
         myElasticNet = ElasticNet(alpha=alpha, l1_ratio=l1_ratio, random_state=42)
 
         mlflow.log_param("alpha", alpha)
