@@ -39,13 +39,17 @@ if __name__ == "__main__":
     model = None
     list_param_alpha = [0.43, 0.82, 0.46, 0.44, 0.44, 0.65, 0.4]
     list_param_l1_ratio = [0.79, 0.73, 0.49, 0.83, 0.46, 0.68, 0.51]
-    for i in range(len(list_param_l1_ratio)):
+    list_param = []
+    for alpha in list_param_alpha:
+        for l1_ratio in list_param_l1_ratio:
+            p = (alpha, l1_ratio)
+            list_param.append(p)
+    for i, param in enumerate(list_param):
         mlflow.start_run(run_name=f"child{i}", nested=True)
         time.sleep(3)
-        alpha = list_param_alpha[i]
-        l1_ratio = list_param_l1_ratio[i]
+        alpha = param[0]
+        l1_ratio = param[1]
         myElasticNet = ElasticNet(alpha=alpha, l1_ratio=l1_ratio, random_state=42)
-
         mlflow.log_param("alpha", alpha)
         mlflow.log_param("l1_ratio", l1_ratio)
 
