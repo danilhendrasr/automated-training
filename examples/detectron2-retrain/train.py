@@ -8,7 +8,7 @@ import mlflow
 from detectron2 import model_zoo
 from detectron2.config import get_cfg, CfgNode
 from detectron2.data import build_detection_test_loader
-from detectron2.engine import DefaultPredictor, DefaultTrainer
+from detectron2.engine import DefaultPredictor
 from detectron2.evaluation import COCOEvaluator, inference_on_dataset
 from detectron2.utils.logger import setup_logger
 from detectron2.utils.visualizer import Visualizer
@@ -16,7 +16,7 @@ from mypackage import utility
 from mypackage.dataset_utils import *
 from mlflow_hooks import *
 from trainer import *
-from mypackage.temporary_prep import data_prep
+from mypackage.prep_utils import data_and_model_prep
 
 def arg_parser():
     parser = argparse.ArgumentParser()
@@ -24,6 +24,7 @@ def arg_parser():
     parser.add_argument("--experiment_name", required=True, help="Digunakan untuk separate dengan project / repo yang lain.")
     parser.add_argument("--lower", required=False, help="Default True. Diguankan untuk perbandingan metric yang diinginkan\n Jika True, maka akan dilakukan registrasi model bila metric lebih rendah daripada metric di registered model")
     parser.add_argument("--p_metric", required=True, help="Nama metric yang akan dibandingkan.")
+    parser.add_argument("--dataset_repo", required=False, default="not_used", help="A DVC repo to pull datased. If DVC is not used, set to `not_used`. Default is `not_used`")
     return parser.parse_args()
 
 def do_autoregister(args, predictor, eval_result):
@@ -48,9 +49,13 @@ def do_autoregister(args, predictor, eval_result):
     )
 
 if __name__ == "__main__":
-    data_prep()
     setup_logger()
     args_ = arg_parser()
+
+    if args_.dataset_repo != "not_used" or args_.dataset_repo is not None:
+        data_and_model_prep(repo_url=args_.dataset_repo, ds_origin="dvc_repo")
+    else: data_and_model_prep()
+    
 
     # get config, set config for MLFlow
     cfg = get_cfg()
