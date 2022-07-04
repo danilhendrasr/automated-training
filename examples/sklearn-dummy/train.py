@@ -36,7 +36,7 @@ if __name__ == "__main__":
     parser = ArgumentParser(description="Sklearn Dummy Example")
     parser.add_argument("--alpha", required=True, type=float, help="alpha parameter")
     parser.add_argument("--l1_ratio", required=True, type=float, help="l1_ratio parameter")
-    args = parser.parse_args()
+    args , _ = parser.parse_known_args()
     dict_args = vars(args)
     alpha = dict_args["alpha"]
     l1_ratio = dict_args["l1_ratio"]
