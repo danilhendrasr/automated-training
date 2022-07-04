@@ -20,6 +20,7 @@ class Parameters(BaseModel):
     git_uri: str
     MLproject_location: str = ""
     commit_hash: str = "main"
+    base_model: str = "None"
 
 
 @app.get("/")
