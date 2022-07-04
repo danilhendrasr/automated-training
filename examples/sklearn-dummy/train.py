@@ -1,4 +1,4 @@
-import random
+from argparse import ArgumentParser
 
 import mlflow
 from sklearn.linear_model import ElasticNet
@@ -33,8 +33,13 @@ def auto_compare_and_register(
 
 if __name__ == "__main__":
     # region params
-    alpha = random.randint(90, 99) / 100
-    l1_ratio = random.randint(90, 99) / 100
+    parser = ArgumentParser(description="Sklearn Dummy Example")
+    parser.add_argument("--alpha", required=True, type=float, help="alpha parameter")
+    parser.add_argument("--l1_ratio", required=True, type=float, help="l1_ratio parameter")
+    args = parser.parse_args()
+    dict_args = vars(args)
+    alpha = dict_args["alpha"]
+    l1_ratio = dict_args["l1_ratio"]
     myElasticNet = ElasticNet(alpha=alpha, l1_ratio=l1_ratio, random_state=42)
 
     mlflow.log_param("alpha", alpha)
@@ -45,9 +50,9 @@ if __name__ == "__main__":
     # Train & evaluate code here.
     #
     # For this dummy example, let's say after evaluate we got metric.
-    metric1 = random.randint(60, 99) / 100
-    metric2 = random.randint(60, 99) / 100
-    metric3 = random.randint(88, 99) / 100
+    metric1 = (alpha + l1_ratio) / 2
+    metric2 = (alpha + l1_ratio) * abs(alpha - l1_ratio)
+    metric3 = alpha + l1_ratio
     mlflow.log_metric("metric1", metric1)
     mlflow.log_metric("metric2", metric2)
     mlflow.log_metric("metric3", metric3)
