@@ -38,6 +38,7 @@ async def retrain(parameters: Parameters):
     content += "}\n```"
     requests.post(webhook_url, json={"content": content})
     uri = parameters.git_uri
+    params = {"base_model": parameters.base_model} # pharse base model argument
     if parameters.MLproject_location != "":
         uri += f"#{parameters.MLproject_location}"
     try:
@@ -46,6 +47,7 @@ async def retrain(parameters: Parameters):
             docker_args={"gpus": "device=0"},
             experiment_name=parameters.experiment_name,
             version=parameters.commit_hash,
+            parameters=params
         )
     except Exception as e:
         requests.post(
