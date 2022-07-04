@@ -32,19 +32,26 @@ def auto_compare_and_register(
 
 
 if __name__ == "__main__":
+    # region params
     alpha = random.randint(90, 99) / 100
     l1_ratio = random.randint(90, 99) / 100
     myElasticNet = ElasticNet(alpha=alpha, l1_ratio=l1_ratio, random_state=42)
 
     mlflow.log_param("alpha", alpha)
     mlflow.log_param("l1_ratio", l1_ratio)
+    # endregion params
 
+    # region train & evaluate
+    # Train & evaluate code here.
+    #
+    # For this dummy example, let's say after evaluate we got metric.
     metric1 = random.randint(60, 99) / 100
     metric2 = random.randint(60, 99) / 100
     metric3 = random.randint(88, 99) / 100
     mlflow.log_metric("metric1", metric1)
     mlflow.log_metric("metric2", metric2)
     mlflow.log_metric("metric3", metric3)
+    # endregion train & evaluate
 
     client = mlflow.tracking.MlflowClient()
     auto_compare_and_register(

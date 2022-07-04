@@ -1,4 +1,3 @@
-import random
 import time
 
 import mlflow
@@ -32,33 +31,47 @@ def auto_compare_and_register(
             mlflow_model.log_model(model, "model")
 
 
-if __name__ == "__main__":
-    mlflow.start_run(run_name="parent")
-    param_parent = {}
-    metric_parent = {"metric3": 0.0}
-    model = None
-    list_param_alpha = [0.43, 0.82, 0.46, 0.44, 0.44, 0.65, 0.4]
-    list_param_l1_ratio = [0.79, 0.73, 0.49, 0.83, 0.46, 0.68, 0.51]
+def get_combination(
+    list_param_alpha: list[float], list_param_l1_ratio: list[float]
+) -> list[tuple[float, float]]:
     list_param = []
     for alpha in list_param_alpha:
         for l1_ratio in list_param_l1_ratio:
             p = (alpha, l1_ratio)
             list_param.append(p)
+    return list_param
+
+
+if __name__ == "__main__":
+    mlflow.start_run(run_name="parent")
+    param_parent = {}
+    metric_parent = {"metric3": 0.0}
+    model = None
+    list_param_alpha = [0.43, 0.82, 0.46]
+    list_param_l1_ratio = [0.79, 0.73, 0.49]
+    list_param = get_combination(list_param_alpha, list_param_l1_ratio)
     for i, param in enumerate(list_param):
         mlflow.start_run(run_name=f"child{i}", nested=True)
-        time.sleep(3)
+        time.sleep(1)
+        # region params
         alpha = param[0]
         l1_ratio = param[1]
         myElasticNet = ElasticNet(alpha=alpha, l1_ratio=l1_ratio, random_state=42)
         mlflow.log_param("alpha", alpha)
         mlflow.log_param("l1_ratio", l1_ratio)
+        # endregion params
 
+        # region train & evaluate
+        # Train & evaluate code here.
+        #
+        # For this dummy example, let's say after evaluate we got metric.
         metric1 = (alpha + l1_ratio) / 2
         metric2 = (alpha + l1_ratio) * abs(alpha - l1_ratio)
         metric3 = alpha + l1_ratio
         mlflow.log_metric("metric1", metric1)
         mlflow.log_metric("metric2", metric2)
         mlflow.log_metric("metric3", metric3)
+        # endregion train & evaluate
 
         mlflow.end_run()
 
@@ -75,7 +88,7 @@ if __name__ == "__main__":
         mlflow.log_param(param_name, param_value)
     for metric_name, metric_value in metric_parent.items():
         mlflow.log_metric(metric_name, metric_value)
-    
+
     client = mlflow.tracking.MlflowClient()
     auto_compare_and_register(
         model=model,
