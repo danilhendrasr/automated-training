@@ -154,6 +154,7 @@ parser.add_argument("--model_name", required=True, help="Nama model untuk diregi
 parser.add_argument("--experiment_name", required=True, help="Digunakan untuk separate dengan project / repo yang lain.")
 parser.add_argument("--lower", required=False, help="Default True. Diguankan untuk perbandingan metric yang diinginkan\n Jika True, maka akan dilakukan registrasi model bila metric lebih rendah daripada metric di registered model")
 parser.add_argument("--p_metric", required=True, help="Nama metric yang akan dibandingkan.")
+parser.add_argument("--base_model", required=True, help="base model origin")
 args = parser.parse_args()
 
 model_name = args.model_name
