@@ -5,4 +5,12 @@ docker_env:
 
 entry_points:
   main:
-    command: python train.py
+    parameters:
+      alpha: { type: float, default: 0.91 }
+      l1_ratio: { type: float, default: 0.92 }
+      model_name : {type: string, default: "default"}
+      experiment_name : {type: string, default: "default"}
+      lower_is_better : {type: bool, default: True}
+      primary_metric : {type: string, default: "AP"}
+      base_model : {type: string, default: "None"}
+    command: python train.py --alpha {alpha} --l1_ratio {l1_ratio}
