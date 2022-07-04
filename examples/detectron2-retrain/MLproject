@@ -1,7 +1,7 @@
 name: vehicle-detection
 
-# docker_env:
-#   image: millenia911/detectron2-mlflow:latest
+docker_env:
+  image: millenia911/detectron2-mlflow:latest
 
 entry_points:
   main: 
