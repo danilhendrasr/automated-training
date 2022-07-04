@@ -20,6 +20,7 @@ class Parameters(BaseModel):
     git_uri: str
     MLproject_location: str = ""
     commit_hash: str = "main"
+    dataset_repo: str = "not_used"
     base_model: str = "None"
 
 
@@ -38,7 +39,7 @@ async def retrain(parameters: Parameters):
     content += "}\n```"
     requests.post(webhook_url, json={"content": content})
     uri = parameters.git_uri
-    params = {"base_model": parameters.base_model} # pharse base model argument
+    params = {"base_model": parameters.base_model, "dataset_repo": parameters.dataset_repo} # pharse argument
     if parameters.MLproject_location != "":
         uri += f"#{parameters.MLproject_location}"
     try:
