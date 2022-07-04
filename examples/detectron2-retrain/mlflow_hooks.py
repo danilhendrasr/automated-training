@@ -14,11 +14,14 @@ class MLflowHook(HookBase):
 
     def before_train(self):
         with torch.no_grad():
-            mlflow.start_run(run_name=self.cfg.MLFLOW.RUN_NAME)
+            mlflow.start_run()
             mlflow.set_tag("mlflow.note.content",
                            self.cfg.MLFLOW.RUN_DESCRIPTION)
             for k, v in self.cfg.items():
                 try:
+                    if isinstance(v, str):
+                        if len(v) > 10:
+                            continue
                     mlflow.log_param(k, v)
                 except:
                     print(f"FAILED TO LOG PARAM => {k}")
