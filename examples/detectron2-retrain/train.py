@@ -53,7 +53,7 @@ if __name__ == "__main__":
     setup_logger()
     args_ = arg_parser()
 
-    if args_.dataset_repo != "not_used" or args_.dataset_repo is not None:
+    if args_.dataset_repo != "not_used" and args_.dataset_repo is not None:
         data_and_model_prep(repo_url=args_.dataset_repo, ds_origin="dvc_repo")
     else: data_and_model_prep()
     
