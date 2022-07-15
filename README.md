@@ -230,3 +230,19 @@ Contoh implementasi ada pada file [example ini](https://github.com/danilhendrasr
         
         #! your training script 
 ```
+
+## Hit API to Trigger Retraining
+ini adalah contoh POST request ke mlflow retraining server (misal :5005)
+1. Get GitHub repo URI, untuk public repo `https://git@github.com/user/repo_name.git` dan untuk private repo `https://{your_personal_access_token}@github.com/user/repo_name.git`
+2. Send POST request ke `http://ip:5005/retrain` dengan body seperti contoh berikut 
+```
+{
+  "experiment_name": "name_of_experiment",
+  "git_uri": "https://git@github.com/user/repo_name.git",
+  "MLproject_location": "path/to/MLproject/directoy",
+  "commit_hash": "main",
+  "dataset_uri": "", #optional
+  "base_model" : ""  #optional # mlflow run id
+}
+```
+3. Anda juga dapat menggunakan UI Swager untuk melakukan request secara manual, engan mengunjungi `http://ip:5005/docs`
