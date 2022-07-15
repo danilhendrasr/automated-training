@@ -9,9 +9,10 @@ There are two components to this project, which is the http server and the mlflo
 
 ## Running the containers
 
-### MLflow Tracking Server
+### MLflow Tracking Server App
 This is the main tracking server, this needs to be run first.
 
+How to run this app
 1. cd to the `apps/mlflow-tracking-server`;
 2. Inspect the dockerfile and make changes if your use case requires it. For example, maybe you're using google cloud storage as the artifact storage, in which case you can refer to [the docs](https://mlflow.org/docs/latest/tracking.html#google-cloud-storage) to know what changes needs to be made;
 3. Build the docker image:
@@ -28,28 +29,34 @@ docker run \
     mlflow-tracking-server
 ```
 
-### HTTP Server
-
+### HTTP Server App
 This HTTP server is built using FastAPI and its role is to listen to http requests and then trigger the retraining process.
 
-How to run this project
-1. Clone the repo and then open the directory.
-2. Rename `.env.example` to `.env` then update the file.
-2. Build docker image.
+How to run this app
+1. Clone the repo and then open this folder.
+2. Create `.env` file or rename `.env.example` to `.env` then update the file. 
+`MLFLOW_TRACKING_URI` points to MLflow tracking server (:5007), `AZURE_STORAGE_ACCESS_KEY` untuk blob storage, dan `webhook_url` adalah URL [webhook discord](https://discord.com/developers/docs/resources/webhook#get-channel-webhooks)
 ```
-docker build -t mlflow-training-server .
+MLFLOW_TRACKING_URI=""
+AZURE_STORAGE_ACCESS_KEY=""
+webhook_url=""
 ```
-3. Run container from that image.
+3. Build docker image.
+```
+docker build -t http-mlflow-training-image .
+```
+4. Run container from that image.
 ```
 docker run \
     -it \
     -p 5005:5005\
     -v /var/run/docker.sock:/var/run/docker.sock \
     --rm \
-    --name mlflow-training-server \
-    mlflow-training-server \
+    --name HTTP-MLflow-trainig \
+    http-mlflow-training-image \
     uvicorn main:app --host 0.0.0.0 --port 5005
 ```
+5. `MLflow Training server` container will run at port `5005`
 
 ## Preparing Your Project
 
