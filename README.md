@@ -209,26 +209,26 @@ Perubahan tersebut berada sebelum training loop anda, seperti kode dibawah.
 Contoh implementasi ada pada file [example ini](https://github.com/danilhendrasr/automated-training/blob/main/examples/sklearn-dummy-hyperparameter/train.py).
 
 ```
-    from mypackage import utility
+from mypackage import utility
     
-    mlflow.start_run(run_name="parent")
-    param_parent = {}
-    metric_parent = {"metric3": 0.0}
+mlflow.start_run(run_name="parent")
+param_parent = {}
+metric_parent = {"metric3": 0.0}
     
-    list_param_alpha = [0.43, 0.82, 0.46]
-    list_param_l1_ratio = [0.79, 0.73, 0.49]
-    list_param = get_combination(list_param_alpha, list_param_l1_ratio)
+list_param_alpha = [0.43, 0.82, 0.46]
+list_param_l1_ratio = [0.79, 0.73, 0.49]
+list_param = get_combination(list_param_alpha, list_param_l1_ratio)
     
-    for i, param in enumerate(list_param):
-        mlflow.start_run(run_name=f"child{i}", nested=True)
+for i, param in enumerate(list_param):
+    mlflow.start_run(run_name=f"child{i}", nested=True)
         
-        alpha = param[0]
-        l1_ratio = param[1]
+    alpha = param[0]
+    l1_ratio = param[1]
         
-        mlflow.log_param("alpha", alpha)
-        mlflow.log_param("l1_ratio", l1_ratio)
+    mlflow.log_param("alpha", alpha)
+    mlflow.log_param("l1_ratio", l1_ratio)
         
-        #! your training script 
+    #! your training script 
 ```
 
 ## Hit API to Trigger Retraining
